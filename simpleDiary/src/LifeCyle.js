@@ -1,6 +1,8 @@
 import React, {useEffect, useState} from "react";
 
 //컴포인트 하나 당 파일 하나의 원칙을 고수했는데 그게 절대적인 것은 아님 -> 사용이유 : 가독성을 위해서 
+//unmounTest가 실행되면 unMountTest가 Mount되는 것 즉, On을 누르면 isVisble이 true가 되면서 UnmountTest가 실행됨
+//Off를 누르면 isVisble이 false가 되면서 unMountTest가 화면에서 사라짐 -> 즉, unMount됨
 const UnmountTest = () => {
     useEffect(() => {
         console.log("Mount!");
@@ -9,7 +11,8 @@ const UnmountTest = () => {
             //Unmount되는 시점에 실행됨
             console.log("UnMount!")
         }
-    },[])
+    },[]);
+
     return (
         <div>
             UnMount Testing component
