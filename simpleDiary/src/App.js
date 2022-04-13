@@ -46,7 +46,7 @@ const App = () => {
     setData([newItem, ...data ]);
   };
 
-  const onDelete = (targetId) => {  //App.js에서 직접 onDelete를 호출하는 것이 아니라서 targetId를 매개변수로 전달받아야 함
+  const onRemove = (targetId) => {  //App.js에서 직접 onDelete를 호출하는 것이 아니라서 targetId를 매개변수로 전달받아야 함
     //데이터를 삭제하기 위해서는 DiaryItem에서 삭제버튼을 클릭했을 때 props로 전달받은 onDelete를 호출해서 데이터를 삭제
     const NewDiaryList = data.filter((item) => item.id !== targetId);
     setData(NewDiaryList);
@@ -55,9 +55,11 @@ const App = () => {
   return (
     <div className="App">
        <DiaryEditor onCreate={onCreate} />
-      <DiaryList onDelete={onDelete} diaryList={data} />
+      <DiaryList onRemove={onRemove} diaryList={data} />
     </div>
   );
 }
 
 export default App;
+
+//onDelete함수 onRemove로 이름 변경
