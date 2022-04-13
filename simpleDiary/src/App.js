@@ -33,7 +33,7 @@ const App = () => {
 
   const dataId = useRef(0)  //추가될 데이터의 ID를 확인하기 위해서(만약에 지금 data의 마지막 id가 3이라면 그 다음은 4)
 
-  const onCreate = (author, content, emotion) => {  //일기 배열에 새로운 데이터를 추가해주는 함수 
+  const onCreate = (author, content, emotion) => {  //일기 배열에 새로운 데이터를 추가해주는 함수(이벤트 핸들러 --> 이벤트 처리함수)
     //DiaryEditor에 작성한 author, content, emotion을 oncreate함수가 받아서 data를 업데이트 시키는 로직을 setData함수를 이용해서 onCreate함수 안에 작성할 것
     const created_date = new Date().getTime();
     const newItem = {
