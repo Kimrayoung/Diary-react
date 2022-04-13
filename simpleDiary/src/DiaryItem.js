@@ -68,18 +68,3 @@ const DiaryItem = ({ onEdit, onRemove, author, content, emotion, created_date, i
 }
 
 export default DiaryItem;
-
-//수정하기를 누르면 본문이 나오는 것이 아니라 본문을 수정할 수 있는 폼이 나타나야 함 --> 수정하는 폼을 state로 나타내야 함
-//state로 나타내는 이유는 화면의 변화가 일어나야 하는 부분 즉, 리렌더링 되어야 하는 부분이기 때문
-
-//수정완료 이벤트를 DiaryItem에서 App까지 전달하기 위해서는 ? --> 데이터를 가지고 있는 App컴포넌트에 수정하는 기능을 하는 함수를 만들어서 DiaryItem까지 보내줘야 함
-//onEdit함수의 setData를 이용해서 데이터를 수정해줌
-//onEdit함수는 DiaryItem이 최종적으로 호출을 해야 함 -> DiaryItem의 부모인 DiaryList로 onEdit함수를 전달 -> 다시 DiaryItem으로 onEdit함수 전달, DiaryItem은 onEdit을 props로 받아서 호출
-
-//수정 완료 버튼을 눌렀을 때 처리할 이벤트 핸들러 함수 -> handleEdit -> 이 함수가 궁극적으로  onEdit함수 수행
-//onEdit이라는 함수가 존재한다는 것만 알고있고 수정하기 버튼을 눌러서 수정하기 이벤트가 발생하면 그 때 App.js로 이벤트 발생을 전달해서 onEdit props에 실제로 onEdit함수가 바인딩 되는 것?
-
-//궁금증 : 수정완료 버튼이 눌리면 -> DiaryItem에서 수정하기 이벤트 발생 -> handleEdit 함수 호출 -> 이 함수가 props로 받은 onEdit함수 호출 -> onEdit이 setState호출 -> state변화
-// ==> 여기서 대체 app으로 event를 전달한느 부분이 어디????
-
-//궁금증2 : 왜 <></>가 또 필요?? 이미 최상위 태그인 </div>로 묶여있는데,,,
