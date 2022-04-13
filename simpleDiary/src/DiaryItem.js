@@ -81,5 +81,6 @@ export default DiaryItem;
 
 //궁금증 : 수정완료 버튼이 눌리면 -> DiaryItem에서 수정하기 이벤트 발생 -> handleEdit 함수 호출 -> 이 함수가 props로 받은 onEdit함수 호출 -> onEdit이 setState호출 -> state변화
 // ==> 여기서 대체 app으로 event를 전달한느 부분이 어디????
+// ==> 음,,, props의 onCreate가 바로 실행되는게 아니고 props로 onCreate를 등록만 해놓은것?
 
 //궁금증2 : 왜 <></>가 또 필요?? 이미 최상위 태그인 </div>로 묶여있는데,,,
