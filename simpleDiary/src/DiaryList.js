@@ -1,7 +1,7 @@
 //일기 리스트(작성한 다이어리가 표시됨)
 import DiaryItem from "./DiaryItem";
 
-const DiaryList = ({ onRemove, diaryList }) => {
+const DiaryList = ({ onEdit, onRemove, diaryList }) => {
 
     return (
         <div className="DiaryList">
@@ -11,7 +11,7 @@ const DiaryList = ({ onRemove, diaryList }) => {
                 {diaryList.map((item) => (
                     // 왼쪽onRemove -> onRemove라는 이름으로 props에 전달 
                     //오른쪽onRemove({onRemove}) --> onRemove라는 이름의 함수가 전달됨
-                    <DiaryItem key={`diaryitem_${item.id}`} {...item} onRemove={onRemove}></DiaryItem>
+                    <DiaryItem key={`diaryitem_${item.id}`} {...item} onRemove={onRemove} onEdit={onEdit}></DiaryItem>
                 ))}
             </div>
         </div>

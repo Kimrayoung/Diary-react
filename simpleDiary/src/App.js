@@ -52,14 +52,21 @@ const App = () => {
     setData(NewDiaryList);
   }
 
+  const onEdit = (targetId, newContent) => {
+    //수정대상 ID. 수정할 내용
+    setData(  //수정할ID의 content만 변경해서 새로운 배열을 return 
+      data.map(item => item.id === targetId ? {...item, content:newContent} : item)
+    )
+
+  }
+
   return (
     <div className="App">
        <DiaryEditor onCreate={onCreate} />
-      <DiaryList onRemove={onRemove} diaryList={data} />
+      <DiaryList onEdit={onEdit} onRemove={onRemove} diaryList={data} />
     </div>
   );
 }
 
 export default App;
 
-//onDelete함수 onRemove로 이름 변경
