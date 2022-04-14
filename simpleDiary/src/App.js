@@ -60,6 +60,7 @@ const App = () => {
     });
     //dispatch --> 어떤 action을 발생시키겠다는 것을 의미, INIT action에 필요한 데이터를 전달해줘야 함
     //그리고 data프로퍼티에 initData라는 값을 넣어놨기 때문에 action객체에서는 이 data를 넣어주면 됨
+    //함수형 업데이트 필요없이, 알아서 현재의 state를 reducer가 참조해서 자동으로 실행 -> dependency array 걱정할 필요없음
     dispatch({type: "INIT", data: initData});
 
     // setData(initData) --> 더 이상 필요없음 setData가 하던 일을 reducer함수가 함
