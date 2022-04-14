@@ -1,4 +1,3 @@
-//https://jsonplaceholder.typicode.com/comments
 import { useState, useRef, useEffect } from 'react';
 import './App.css';
 import DiaryEditor from './DiaryEditor';
@@ -8,14 +7,9 @@ const App = () => {
   const [data, setData] = useState([])
 
   const dataId = useRef(0);
-
-  //API를 호출하는 함수 --> fetch함수 이용() --> promise를 반환(비동기)
   const getData = async() => {
-    //url으로 결과를 가져오고 then은 프로미스가 성공적으로 실행된다면 실행됨, 즉, 성공한 결과값이 들어있음
     const res = await fetch('https://jsonplaceholder.typicode.com/comments'
     ).then(res=>res.json());
-    // console.log(res);
-    //res에서 20개만 자른 배열을 map을 통해서 반환되는 값을 모아서 다시 배열을 만듬
     const initData = res.slice(0, 20).map((item) => {
       return {
         author: item.author,
@@ -30,8 +24,6 @@ const App = () => {
   }
 
   useEffect(() => {
-    //처음에 Mount될때 실행 -> 즉, 처음에 Mount될때 getData가 실행되고 -> getData의 fetch로 then데이터들이 가져와짐
-    //(then에 결과값이 가지고 있음) -> 그런후에 20개를 잘라서 해당 아이템을 하나씩 다시 리턴받아서 새로운 배열로 만들어줌
     getData();
   },[]);
 
@@ -48,23 +40,37 @@ const App = () => {
     setData([newItem, ...data ]);
   };
 
-  const onRemove = (targetId) => {  //App.js에서 직접 onDelete를 호출하는 것이 아니라서 targetId를 매개변수로 전달받아야 함
-    //데이터를 삭제하기 위해서는 DiaryItem에서 삭제버튼을 클릭했을 때 props로 전달받은 onDelete를 호출해서 데이터를 삭제
+  const onRemove = (targetId) => { 
     const NewDiaryList = data.filter((item) => item.id !== targetId);
     setData(NewDiaryList);
   }
 
   const onEdit = (targetId, newContent) => {
-    //수정대상 ID. 수정할 내용
-    setData(  //수정할ID의 content만 변경해서 새로운 배열을 return 
+    setData(  
       data.map(item => item.id === targetId ? {...item, content:newContent} : item)
     )
 
   }
 
+  const getDiaryAnalysis = () => {
+    console.log("일기 분석 시작");
+
+    const goodCnt = data.filter((item) => item.emotion >= 3).length; //emotion이 3이상인게 새로운 배열로 생성되고 그 배열의 길이를 구한것
+    const badCnt = data.length - goodCnt;
+    const goodRatio = (goodCnt / data.length) * 100;
+    return {goodCnt, badCnt, goodRatio};
+  }
+
+  //여기서 먼저 이렇게 해주는 이유는 return에서 함수를 호출하게 되면 3번을 호출해야 하므로 비효율적임
+  const {goodCnt, badCnt, goodRatio} = getDiaryAnalysis(); //해당 함수가 객체로 반환되므로 객체로 받아야 한다
+
   return (
     <div className="App">
        <DiaryEditor onCreate={onCreate} />
+       <div>전체 일기 : {data.length} </div>
+       <div>기분 좋은 일기 개수 : {goodCnt} </div>
+       <div>기분 나쁜 일기 개수 : {badCnt} </div>
+       <div>기분 좋은 일기 비율 : {goodRatio} </div>
       <DiaryList onEdit={onEdit} onRemove={onRemove} diaryList={data} />
     </div>
   );
@@ -72,6 +78,4 @@ const App = () => {
 
 export default App;
 
-//6-8 React에서 API를 호출하기
-//useEffect를 이용하고 컴포넌트 Mount시점에 API를 호출하고 해당 API의 결과값을 일기 데이터의 초기값으로 이용하기
-//Mount되자마자 url을 통해서 데이터를 가져올 것 이므로 useEffect사용
+//App 컴포넌트에서 data state가 가진 일기 중에 1은 몇개를 가졌는지 3은 몇개를 가졌는지 5는 몇개를 가졌는지 등을 파악
