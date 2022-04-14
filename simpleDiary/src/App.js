@@ -1,10 +1,48 @@
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useReducer, useRef } from "react";
 import './App.css';
 import DiaryEditor from './DiaryEditor';
 import DiaryList from './DiaryList';
 
+//복잡한 상태변화함수를 처리할 컴포넌트
+//이 reducer함수는 두개의 인자를 받음 
+//첫번째 인자 -> 상태변화가 일어나기 직접의 state
+//두번째 인자 -> 어떤 상태변화를 일으켜야 하는지에 대한 정보가 담긴 action객체
+//action객체에는 반드시 type 프로퍼티가 들어있는데 이 type프로퍼티를 통해서 상태변화 처리
+//그리고 이 reducer가 return하는 값이 새로운 state의 값
+const reducer = (state, action) => {
+  switch(action.type) {
+    case 'INIT': {
+      //이 action.data로 새로운  state가 됨
+      return action.data;
+    }
+    case 'CREATE': {
+      const created_date = new Date().getTime();
+      const newItem = {  //새로운 일기 데이터 -> 이 데이터를 state에 추가하면 됨
+        ...action.data, //아래 dispath함수에서 전달한 데이터가 들어있음 
+        created_date
+      }
+      return [newItem, ...state];
+    }
+    case 'REMOVE': {
+      //아래처럼 하면 state에서 targetid만 지우고 새로운 배열이 생성되서 오고 이 data가 return됨
+      return state.filter((item) => item.id !== action.targetId);
+    }
+    case 'EDIT':{
+      return state.map((item) => 
+      item.id === action.targetId ? 
+      {...item, content: action.newContent} : item);
+    }
+    default:
+    return state; //state를 그대로 전달해서 어떤 변경이 일어나지 않고 그대로 사용한다면 값 변화 없음
+  }
+}
+
 const App = () => {
-  const [data, setData] = useState([])
+  // const [data, setData] = useState([]);
+  //이제 일기 data state를 useState가 아니라 useReducer을 통해서 관리
+  //reducer -> 상태변화를 처리할 함수 --> 별도의 함수가 존재하는 것이 아니라 직접 만들어서 사용해야 함
+  //[] -> data state의 초기값
+  const [data, dispatch] = useReducer(reducer, [])
 
   const dataId = useRef(0);
   const getData = async() => {
@@ -20,8 +58,11 @@ const App = () => {
         id : dataId.current++  //id를 지금 현재의current값으로 넣고 나서 나중에 +1을 해줄것
       }
     });
-    console.log('initData', initData);
-    setData(initData)
+    //dispatch --> 어떤 action을 발생시키겠다는 것을 의미, INIT action에 필요한 데이터를 전달해줘야 함
+    //그리고 data프로퍼티에 initData라는 값을 넣어놨기 때문에 action객체에서는 이 data를 넣어주면 됨
+    dispatch({type: "INIT", data: initData});
+
+    // setData(initData) --> 더 이상 필요없음 setData가 하던 일을 reducer함수가 함
   }
 
   useEffect(() => {
@@ -31,38 +72,22 @@ const App = () => {
   }, []);
 
   const onCreate = useCallback((author, content, emotion) => {
-    const created_date = new Date().getTime();
-    const newItem = {
-      author,
-      content,
-      emotion,
-      created_date,
-      id: dataId.current
-    };
-
+    //dispatch의 action객체 새롭게 생성된 데이터를 전달하면 reducer함수 부분에서 데이터를 추가해주면됨
+    dispatch({
+      type: 'CREATE', 
+      data: {author, content, emotion, id: dataId.current}
+    });
     dataId.current += 1;
-        //data배열을 인자로 넘겨줘서 아이템을 추가한 새로운 배열을 반환
-    setData((data) => [newItem, ...data]);
   }, []);
     
 
   const onRemove = useCallback((targetId) => {
-    //setData에서 함수형을 전달하는 경우에는 data를 전달해서 data를 리턴하는 방식을 이용해야 함
-    //setData에 전달되는 파라미터(인자)에 최신 state(최신의 데이터)가 전달되는 것
-    setData((data) => data.filter((it) => it.id !== targetId));
+    dispatch({type:'REMOVE', targetId});
   }, []
   );
 
   const onEdit = useCallback((targetId, newContent) => {
-    setData((data) => 
-    //파라미터로 data를 받고 이 data를 data.map을 통해서 삭제한 일기를 제외하고 새로운 배열을 생성함
-    //이걸 해석해보면 data = 해당 일기가 삭제된 배열
-    //1. 해당 일기가 삭제된 배열 생성 
-    //2. 1번에서 생긴 배열이 data에 저장
-      data.map((it) =>
-        it.id === targetId ? { ...it, content: newContent } : it
-      )
-    );
+    dispatch({type: "EDIT", targetId, newContent});
   }, []
   );
   const getDiaryAnalysis = useMemo(() => {
@@ -92,5 +117,10 @@ const App = () => {
 
 export default App;
 
-//최적화 문제 
-//하나의 일기만 삭제해도 전체 일기 리스트가 모두 리렌더링됨
+//복잡한 상태변화 로직 분리
+//현재 App컴포넌트에 3가지의 상태 변화 처리 함수가 있음
+//ex. onCreate, onEdit, onRemove
+//이 함수들은 컴포넌트 내에만 존재해야 했음 --> 왜냐하면 컴포넌트 내에있는 state의 상태를 참조해야 하기 때문
+
+//useReducer
+// 컴포넌트에서 상태변화 로직을 분리하는 것
