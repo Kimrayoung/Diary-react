@@ -1,7 +1,7 @@
-import { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 
 //자식 컴포넌트 
-const TextView = ({ text }) => {
+const TextView = React.memo(({ text }) => {
     useEffect(() => {
         console.log(`Update :: Text : ${text}`);
     });
@@ -11,9 +11,9 @@ const TextView = ({ text }) => {
             {text}
         </div>
     )
-}
+});
 
-const CountView = ({ count }) => {
+const CountView = React.memo(({ count }) => {
     useEffect(() => {
         console.log(`Update :: Count : ${count}`);
     });
@@ -23,7 +23,7 @@ const CountView = ({ count }) => {
             {count}
         </div>
     )
-}
+});
 //자식 컴포넌트
 
 const OptimizeTest = () => {
@@ -54,3 +54,6 @@ export default OptimizeTest;
 // --> 즉, 성능 낭비
 
 //해결방법 : 컴포넌트 재사용 --> React.memo사용
+
+//React.memo를 CountView컴포넌트와 TextView컴포넌트에 사용하게 되면 text의 state가 변하지 않는 이상 textview가 변하지 않을 것
+//CountView또한 count state가 변하지 않는 이상 CountView가 리렌더링 되지 않을것 
