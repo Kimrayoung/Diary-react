@@ -1,6 +1,10 @@
-import { useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 
 const DiaryItem = ({ onEdit, onRemove, author, content, emotion, created_date, id }) => {
+    useEffect(() => {
+        console.log(`${id}번째 아이템 렌더`)
+    })
+
     //현재 해당 일기가 수정 중인지 수정 중이 아닌지를 나타냄
     const [isEdit, setIsEdit] = useState(false);
 
@@ -67,4 +71,4 @@ const DiaryItem = ({ onEdit, onRemove, author, content, emotion, created_date, i
     )
 }
 
-export default DiaryItem;
+export default React.memo(DiaryItem);
