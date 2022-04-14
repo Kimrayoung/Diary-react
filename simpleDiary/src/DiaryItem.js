@@ -10,7 +10,7 @@ const DiaryItem = ({ onEdit, onRemove, author, content, emotion, created_date, i
 
     //기본 상태가 props를 통해서 받아온 content --> 수정하는 폼을 업데이트(이게 없으면 수정하기를 눌러서 나타나는 폼에 입력을 해도 아무것도 입력이 되지 않음)
     const [localContent, setLocalContent] = useState(content);
-    const localContentInput = useRef
+    const localContentInput = useRef();
 
      const handleRemove = () => {
         if(window.confirm(`${id+1}번쨰를 정말 삭제하시겠습니까?`)) {
